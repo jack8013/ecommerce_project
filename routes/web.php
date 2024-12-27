@@ -38,3 +38,6 @@ route::post('admin/update_category/{id}',[AdminController::class,'update_categor
 route::get('admin/add_product',[ProductController::class,'add_product'])->middleware(['auth','admin'])->name('admin.add_product');
 route::post('admin/upload_product',[ProductController::class,'upload_product'])->middleware(['auth','admin'])->name('admin.upload_product');
 route::get('admin/view_product',[ProductController::class,'view_product'])->middleware(['auth','admin'])->name('admin.view_product');
+route::delete('admin/delete_product/{id}',[ProductController::class,'delete_product'])->middleware(['auth','admin'])->name('admin.delete_product');
+route::get('admin/edit_product/{id}',[ProductController::class,'edit_product'])->middleware(['auth','admin'])->name('admin.edit_product');
+route::post('admin/update_product/{id}',[ProductController::class,'update_product'])->middleware(['auth','admin'])->name('admin.update_product');
