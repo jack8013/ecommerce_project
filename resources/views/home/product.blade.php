@@ -6,32 +6,30 @@
             </h2>
         </div>
         <div class="row">
+            @foreach($products as $product)
             <div class="col-sm-6 col-md-4 col-lg-3">
                 <div class="box">
-                    <a href="">
+                    <a href="{{route('product_details',$product->id)}}">
                         <div class="img-box">
                             <img src="images/p1.png" alt="">
                         </div>
                         <div class="detail-box">
                             <h6>
-                                Ring
+                                {{$product->name}}
                             </h6>
                             <h6>
                                 Price
                                 <span>
-                                    $200
+                                    {{$product->price}}
                                 </span>
                             </h6>
                         </div>
-                        <div class="new">
-                            <span>
-                                New
-                            </span>
-                        </div>
+
                     </a>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-4 col-lg-3">
+            @endforeach
+            <!-- <div class="col-sm-6 col-md-4 col-lg-3">
                 <div class="box">
                     <a href="">
                         <div class="img-box">
@@ -206,11 +204,11 @@
                     </a>
                 </div>
             </div>
+        </div> -->
+            <!-- <div class="btn-box">
+                <a href="">
+                    View All Products
+                </a>
+            </div> -->
         </div>
-        <div class="btn-box">
-            <a href="">
-                View All Products
-            </a>
-        </div>
-    </div>
 </section>
