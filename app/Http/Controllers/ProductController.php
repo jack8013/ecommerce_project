@@ -116,9 +116,25 @@ class ProductController extends Controller
         ]);
 
         toastr()
-        ->closeButton()
-        ->success('Product updated successfully');
+            ->closeButton()
+            ->success('Product updated successfully');
 
         return redirect('admin/view_product');
+    }
+
+    public function search_product(Request $request)
+    {
+        $search = $request->search;
+
+        $products = Product::where('name', 'LIKE', '%' . $search . '%')
+            ->orWhere('category', 'like', '%' . $search . '%')
+            ->paginate();
+
+        return view('admin.view_product', compact('products'));
+    }
+
+    public function product_details(int $id){
+        $product = Product::find($id);
+        return view('home.product_details',compact('product'));
     }
 }
