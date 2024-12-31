@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -135,6 +137,9 @@ class ProductController extends Controller
 
     public function product_details(int $id){
         $product = Product::find($id);
-        return view('home.product_details',compact('product'));
+        $user_id = Auth::user()?->id;
+
+        $count = Cart::where('user_id', $user_id)->count();
+        return view('home.product_details',compact('product','count'));
     }
 }
