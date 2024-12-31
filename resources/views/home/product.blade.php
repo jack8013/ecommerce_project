@@ -26,6 +26,8 @@
                         </div>
 
                     </a>
+                    <a class="btn btn-primary" href="{{route('add_cart',$product->id)}}"> Add to Cart</a>
+
                 </div>
             </div>
             @endforeach
