@@ -46,7 +46,7 @@
                     <input class="btn btn-success" type="submit" value="Log Out">
                 </form>
 
-                <a href="">
+                <a href="{{route('user_cart')}}">
                     <i class="fa fa-shopping-bag" aria-hidden="true"></i>
                     {{$count}}
                 </a>

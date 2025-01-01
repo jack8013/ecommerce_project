@@ -48,3 +48,4 @@ route::get('admin/search_product', [ProductController::class, 'search_product'])
 // Home Product
 route::get('product_details/{id}', [ProductController::class, 'product_details'])->name('product_details');
 route::get('add_cart/{id}', [HomeController::class, 'add_cart'])->name('add_cart')->middleware('auth', 'verified');
+route::get('user_cart', [HomeController::class, 'user_cart'])->name('user_cart')->middleware('auth', 'verified');
