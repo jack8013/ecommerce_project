@@ -26,8 +26,28 @@
             font: 1em;
         }
 
-        td{
+        td {
             border: 1px solid skyblue;
+        }
+
+        .cart_value {
+            text-align: center;
+            margin-bottom: 70px;
+            padding: 18px;
+        }
+
+        .order-design {
+            padding-right: 150px;
+            margin-top: -200px;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+        }
+
+        .div-gap {
+            padding: 20px;
         }
     </style>
 </head>
@@ -42,7 +62,36 @@
     </div>
     <!-- end hero area -->
 
+
+    <?php
+    $value = 0
+    ?>
     <div class="div_design">
+
+        <div class="order_design">
+            <form action="{{ route('place_order') }}" method="POST">
+                @csrf
+                <div class="div-gap">
+                    <label>Receiver Name</label>
+                    <input type="text" name="name" value="{{Auth::user()->name}}">
+                </div>
+
+                <div class="div-gap">
+
+                    <label>Receiver Address</label>
+                    <textarea name="address" id="">{{Auth::user()->address}}</textarea>
+                </div>
+                <div class="div-gap">
+                    <label>Receiver Phone</label>
+                    <input type="text" name="phone" value="{{Auth::user()->phone}}">
+                </div>
+
+                <div class="div-gap">
+                    <input class="btn btn-primary" type="submit" value="Place Order">
+                </div>
+            </form>
+        </div>
+
         <table class="cart_table">
             <tr>
                 <th>
@@ -64,13 +113,27 @@
                     {{$cart->product->price}}
                 </td>
                 <td>
-                {{$cart->product->image}}
+                    {{$cart->product->image}}
+                </td>
+                <td>
+                    <form action="{{ route('remove_cart_item', $cart->id) }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <input class="btn btn-danger" type="submit" value="Remove">
+                    </form>
                 </td>
             </tr>
+            <?php
+
+            $value = $value + $cart->product->price;
+            ?>
+
             @endforeach
 
-
         </table>
+    </div>
+    <div class="cart_value">
+        <h3>Total Value of Cart: ${{$value}}</h3>
     </div>
 
     <!-- info section -->

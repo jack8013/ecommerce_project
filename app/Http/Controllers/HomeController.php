@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Cart;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -67,5 +68,40 @@ class HomeController extends Controller
         $cart = Cart::where('user_id', $user_id)->get();
 
         return view('home.user_cart', compact('cart', 'count'));
+    }
+
+    public function remove_cart_item(int $id)
+    {
+        $cart_item = Cart::find($id);
+
+        $cart_item->delete();
+
+        return redirect()->back();
+    }
+
+    public function place_order(Request $request)
+    {
+
+        $userid = Auth::user()?->id;
+
+        $carts = Cart::where('user_id', $userid)->get();
+
+
+        foreach ($carts as $cart) {
+            $order = Order::create(
+                [
+                    'name' => $request->name,
+                    'rec_address' => $request->address,
+                    'phone' => $request->phone,
+                    'user_id' => $userid,
+                    'product_id' => $cart->product_id
+
+                ]
+            );
+        }
+
+        Cart::where('user_id', $userid)->delete();
+
+        return redirect()->back();
     }
 }
