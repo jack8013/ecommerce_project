@@ -45,6 +45,12 @@ route::get('admin/edit_product/{id}', [ProductController::class, 'edit_product']
 route::post('admin/update_product/{id}', [ProductController::class, 'update_product'])->middleware(['auth', 'admin'])->name('admin.update_product');
 route::get('admin/search_product', [ProductController::class, 'search_product'])->middleware(['auth', 'admin'])->name('admin.search_product');
 
+//Order
+route::get('admin/view_order', [AdminController::class, 'view_order'])->middleware(['auth', 'admin'])->name('admin.view_order');
+route::post('admin/on_the_way/{id}', [AdminController::class, 'on_the_way'])->middleware(['auth', 'admin'])->name('admin.on_the_way');
+route::post('admin/delivered/{id}', [AdminController::class, 'delivered'])->middleware(['auth', 'admin'])->name('admin.delivered');
+route::post('admin/print_pdf/{id}', [AdminController::class, 'print_pdf'])->middleware(['auth', 'admin'])->name('admin.print_pdf');
+
 // Home Product
 route::get('product_details/{id}', [ProductController::class, 'product_details'])->name('product_details');
 route::get('add_cart/{id}', [HomeController::class, 'add_cart'])->name('add_cart')->middleware('auth', 'verified');

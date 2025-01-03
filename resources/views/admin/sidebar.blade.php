@@ -18,4 +18,5 @@
         <li><a href="#">Page</a></li>
       </ul>
     </li>
+    <li><a href="{{ route('admin.view_order')}}"><i class="icon-grid"></i>Orders</a></li>
 </nav>
