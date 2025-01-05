@@ -13,7 +13,15 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('admin.index');
+        $user = User::where('usertype', 'user')->count();
+
+        $products = Product::all()->count();
+
+        $orders = Order::all()->count();
+
+        $delivered = Order::where('status', 'Delivered')->count();
+
+        return view('admin.index', compact('user', 'products', 'orders', 'delivered'));
     }
 
     public function home()
@@ -103,5 +111,16 @@ class HomeController extends Controller
         Cart::where('user_id', $userid)->delete();
 
         return redirect()->back();
+    }
+
+    public function get_order()
+    {
+        $userid = Auth::user()?->id;
+
+        $orders = Order::where('user_id', $userid)->get();
+
+        $count = Cart::where('user_id', $userid)->count();
+
+        return view('home.order', compact('count', 'orders'));
     }
 }

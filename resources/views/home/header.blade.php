@@ -40,16 +40,24 @@
                 @if (Route::has('login'))
 
                 @auth
+
+                <a href="{{route('get_order')}}">
+                    <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                    My Orders
+                </a>
+
+                <a href="{{route('user_cart')}}">
+                    <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                    {{$count}}
+                </a>
+
                 <form style="padding: 10px" method="POST" action="{{ route('logout') }}">
                     @csrf
 
                     <input class="btn btn-success" type="submit" value="Log Out">
                 </form>
 
-                <a href="{{route('user_cart')}}">
-                    <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-                    {{$count}}
-                </a>
+
 
                 @else
                 <a href="{{route('login')}}">
