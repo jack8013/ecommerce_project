@@ -29,7 +29,7 @@ class ProductController extends Controller
                 'description' => 'required',
                 'price' => 'required|deci:2',
                 'quantity' => 'nullable',
-                'category' => 'required',
+                'category_id' => 'required',
                 'image' => 'nullable',
             ]
         );
@@ -47,7 +47,7 @@ class ProductController extends Controller
             'description' => $request->description,
             'image' => $imagename,
             'price' => $request->price,
-            'category' => $request->category,
+            'category_id' => $request->category_id,
             'quantity' => $request->quantity,
         ]);
 

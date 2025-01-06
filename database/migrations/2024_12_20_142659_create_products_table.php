@@ -17,9 +17,11 @@ return new class extends Migration
             $table->mediumtext('description');
             $table->string('image')->nullable();
             $table->string('price');
-            $table->string('category')->nullable();
+            $table->unsignedBigInteger('category_id');
             $table->string('quantity')->nullable();
             $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade');
         });
     }
 

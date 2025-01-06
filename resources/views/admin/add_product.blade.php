@@ -88,13 +88,13 @@
                                 <label>
                                     Product Category
                                 </label>
-                                <select name="category">
+                                <select name="category_id">
                                     <option>
                                         Select an Option
                                     </option>
 
                                     @foreach($category as $category)
-                                    <option value="{{$category->category_name}}">
+                                    <option value="{{$category->id}}">
                                         {{$category->category_name}}
                                     </option>
                                     @endforeach
