@@ -18,7 +18,7 @@
         font-size: 1.25em !important;
     }
 
-    textarea{
+    textarea {
         width: 450px;
         height: 80px;
     }
@@ -85,15 +85,15 @@
                                 <label>
                                     Product Category
                                 </label>
-                                <select name="category">
-                                    <option value="{{$data->category}}">
-                                        {{$data->category}}
+                                <select name="category_id">
+                                    <option value="{{$data->categories->id}}">
+                                        {{$data->categories->category_name}}
                                     </option>
 
                                     @foreach($category as $category)
 
-                                    @if($data->category !== $category->category_name)
-                                    <option value="{{$category->category_name}}">
+                                    @if($data->categories->category_name !== $category->category_name)
+                                    <option value="{{$category->id}}">
                                         {{$category->category_name}}
                                     </option>
                                     @endif
