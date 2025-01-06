@@ -28,37 +28,47 @@ require __DIR__ . '/auth.php';
 
 route::get('admin/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'admin'])->name('admin.dashboard');
 
-
-// Admin Category
-route::get('admin/view_category', [AdminController::class, 'view_category'])->middleware(['auth', 'admin'])->name('admin.view_category');
-route::post('admin/add_category', [AdminController::class, 'add_category'])->middleware(['auth', 'admin'])->name('admin.add_category');
-route::delete('admin/delete_category/{id}', [AdminController::class, 'delete_category'])->middleware(['auth', 'admin'])->name('admin.delete_category');
-route::get('admin/edit_category/{id}', [AdminController::class, 'edit_category'])->middleware(['auth', 'admin'])->name('admin.edit_category');
-route::post('admin/update_category/{id}', [AdminController::class, 'update_category'])->middleware(['auth', 'admin'])->name('admin.update_category');
-
-// Admin Product
-route::get('admin/add_product', [ProductController::class, 'add_product'])->middleware(['auth', 'admin'])->name('admin.add_product');
-route::post('admin/upload_product', [ProductController::class, 'upload_product'])->middleware(['auth', 'admin'])->name('admin.upload_product');
-route::get('admin/view_product', [ProductController::class, 'view_product'])->middleware(['auth', 'admin'])->name('admin.view_product');
-route::delete('admin/delete_product/{id}', [ProductController::class, 'delete_product'])->middleware(['auth', 'admin'])->name('admin.delete_product');
-route::get('admin/edit_product/{id}', [ProductController::class, 'edit_product'])->middleware(['auth', 'admin'])->name('admin.edit_product');
-route::post('admin/update_product/{id}', [ProductController::class, 'update_product'])->middleware(['auth', 'admin'])->name('admin.update_product');
-route::get('admin/search_product', [ProductController::class, 'search_product'])->middleware(['auth', 'admin'])->name('admin.search_product');
-
-//Admin Order
-route::get('admin/view_order', [AdminController::class, 'view_order'])->middleware(['auth', 'admin'])->name('admin.view_order');
-route::post('admin/on_the_way/{id}', [AdminController::class, 'on_the_way'])->middleware(['auth', 'admin'])->name('admin.on_the_way');
-route::post('admin/delivered/{id}', [AdminController::class, 'delivered'])->middleware(['auth', 'admin'])->name('admin.delivered');
-route::post('admin/print_pdf/{id}', [AdminController::class, 'print_pdf'])->middleware(['auth', 'admin'])->name('admin.print_pdf');
-
 // Home Product
 route::get('product_details/{id}', [ProductController::class, 'product_details'])->name('product_details');
 
-// Cart
-route::get('add_cart/{id}', [HomeController::class, 'add_cart'])->name('add_cart')->middleware('auth', 'verified');
-route::get('user_cart', [HomeController::class, 'user_cart'])->name('user_cart')->middleware('auth', 'verified');
-route::delete('remove_cart_item/{id}', [HomeController::class, 'remove_cart_item'])->name('remove_cart_item')->middleware('auth', 'verified');
+Route::middleware('auth', 'admin')->prefix('admin')->name('admin.')->group(function () {
 
-// Order
-route::post('place_order', [HomeController::class, 'place_order'])->name('place_order')->middleware('auth', 'verified');
-route::get('get_order', [HomeController::class, 'get_order'])->name('get_order')->middleware('auth', 'verified');
+    // Admin Category
+    route::get('view_category', [AdminController::class, 'view_category'])->name('view_category');
+    route::post('add_category', [AdminController::class, 'add_category'])->name('add_category');
+    route::delete('delete_category/{id}', [AdminController::class, 'delete_category'])->name('delete_category');
+    route::get('edit_category/{id}', [AdminController::class, 'edit_category'])->name('edit_category');
+    route::post('update_category/{id}', [AdminController::class, 'update_category'])->name('update_category');
+
+
+
+    // Admin Product
+    route::get('add_product', [ProductController::class, 'add_product'])->name('add_product');
+    route::post('upload_product', [ProductController::class, 'upload_product'])->name('upload_product');
+    route::get('view_product', [ProductController::class, 'view_product'])->name('view_product');
+    route::delete('delete_product/{id}', [ProductController::class, 'delete_product'])->name('delete_product');
+    route::get('edit_product/{id}', [ProductController::class, 'edit_product'])->name('edit_product');
+    route::post('update_product/{id}', [ProductController::class, 'update_product'])->name('update_product');
+    route::get('search_product', [ProductController::class, 'search_product'])->name('search_product');
+
+
+    //Admin Order
+    route::get('view_order', [AdminController::class, 'view_order'])->name('view_order');
+    route::post('on_the_way/{id}', [AdminController::class, 'on_the_way'])->name('on_the_way');
+    route::post('delivered/{id}', [AdminController::class, 'delivered'])->name('delivered');
+    route::post('print_pdf/{id}', [AdminController::class, 'print_pdf'])->name('print_pdf');
+});
+
+
+
+
+Route::middleware('auth', 'verified')->group(function () {
+    // Cart
+    route::get('add_cart/{id}', [HomeController::class, 'add_cart'])->name('add_cart');
+    route::get('user_cart', [HomeController::class, 'user_cart'])->name('user_cart');
+    route::delete('remove_cart_item/{id}', [HomeController::class, 'remove_cart_item'])->name('remove_cart_item');
+
+    // Order
+    route::post('place_order', [HomeController::class, 'place_order'])->name('place_order');
+    route::get('get_order', [HomeController::class, 'get_order'])->name('get_order');
+});
