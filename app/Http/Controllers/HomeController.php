@@ -48,15 +48,25 @@ class HomeController extends Controller
     public function add_cart(int $id)
     {
         $product = Product::find($id);
-
         $user = Auth::user();
 
-        $user_id = $user->id;
+        //If user has no cart, create one
+        $cart = $user->cart ?: $cart = Cart::create(['user_id' => $user->id,]);
 
-        $cart = Cart::create([
-            'user_id' => $user_id,
-            'product_id' => $product->id,
-        ]);
+        $productExist = $cart->products()->where('product_id', $id)->first();
+
+        if ($productExist) {
+            $quantity = $productExist->pivot->quantity + 1;
+            $cart->products()->updateExistingPivot(
+                $id,
+                [
+                    'quantity' => $quantity,
+                    'price' => $product->price * $quantity
+                ]
+            );
+        } else {
+            $cart->products()->attach($id, ['quantity' => 1, 'price' => $product->price]);
+        }
 
         toastr()
             ->closeButton()
@@ -67,13 +77,16 @@ class HomeController extends Controller
 
     public function user_cart()
     {
-        $products = Product::all();
 
         $user_id = Auth::user()?->id;
 
         $count = Cart::where('user_id', $user_id)->count();
 
-        $cart = Cart::where('user_id', $user_id)->get();
+        // Each user has only one cart, so fetch cart through User's eloquent relationship
+        $cart = Auth::user()?->cart;
+
+        //$products = Product::all();
+        //$cart = Cart::with('products')->where('user_id', $user_id)->get();
 
         return view('home.user_cart', compact('cart', 'count'));
     }

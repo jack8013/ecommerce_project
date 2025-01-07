@@ -17,11 +17,13 @@ class Cart extends Model
 
     public function user()
     {
-        return $this->hasOne('App\Models\User', 'id', 'user_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function product()
+    public function products()
     {
-        return $this->hasOne('App\Models\Product', 'id', 'product_id');
+        //return $this->hasOne('App\Models\Product', 'id', 'product_id');
+
+        return $this->belongsToMany(Product::class, 'cart_product')->withPivot('quantity', 'price')->withTimestamps();
     }
 }

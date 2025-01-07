@@ -22,6 +22,11 @@ class Product extends Model
 
     public function categories()
     {
-        return   $this->hasOne('App\Models\Category', 'id', 'category_id');
+        return $this->hasOne('App\Models\Category', 'id', 'category_id');
+    }
+
+    public function cart()
+    {
+        return $this->belongsToMany(Cart::class, 'cart_product')->withPivot('quantity', 'price')->withTimestamps();
     }
 }

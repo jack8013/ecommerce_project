@@ -64,7 +64,7 @@
 
 
     <?php
-    $value = 0
+        $value = 0
     ?>
     <div class="div_design">
 
@@ -104,16 +104,16 @@
                     Image
                 </th>
             </tr>
-            @foreach($cart as $cart)
+            @foreach($cart->products as $product)
             <tr>
                 <td>
-                    {{$cart->product->name}}
+                    {{$product->name}}
                 </td>
                 <td>
-                    {{$cart->product->price}}
+                    {{$product->price}}
                 </td>
                 <td>
-                    {{$cart->product->image}}
+                    {{$product->image}}
                 </td>
                 <td>
                     <form action="{{ route('remove_cart_item', $cart->id) }}" method="post">
@@ -125,7 +125,7 @@
             </tr>
             <?php
 
-            $value = $value + $cart->product->price;
+            //$value = $value + $cart->product->price;
             ?>
 
             @endforeach
