@@ -26,8 +26,10 @@
                         </div>
 
                     </a>
-                    <a class="btn btn-primary" href="{{route('add_cart',$product->id)}}"> Add to Cart</a>
-
+                    <form action="{{route('add_cart',$product->id)}}" method="POST">
+                        @csrf
+                        <input class="btn btn-primary" type="submit" value="Add to Cart"></input>
+                    </form>
                 </div>
             </div>
             @endforeach

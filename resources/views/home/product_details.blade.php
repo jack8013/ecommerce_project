@@ -30,7 +30,7 @@
         <div class="container">
             <div class="heading_container heading_center">
                 <h2>
-                    Latest Products
+                    Product Details
                 </h2>
             </div>
             <div class="row">
@@ -65,7 +65,7 @@
                             <h6>
                                 Quantity
                                 <span>
-                                    {{$product->quantity}}
+                                    {{$product->quantity}} In Stock
                                 </span>
                             </h6>
                         </div>
@@ -73,6 +73,15 @@
 
                         <div class="detail-box">
                             <p>{{$product->description}}</p>
+
+                        </div>
+
+                        <div class="detail-box">
+                            <form action="{{route('add_cart',$product->id)}}" method="POST">
+                                @csrf
+                                <input type="number" name="quantity" value="1" min="1" max="{{$product->quantity}}">
+                                <input class="btn btn-primary" type="submit" value="Add to Cart"></input>
+                            </form>
                         </div>
                     </div>
                 </div>

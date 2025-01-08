@@ -64,7 +64,7 @@
 
 
     <?php
-        $value = 0
+    $value = 0
     ?>
     <div class="div_design">
 
@@ -97,26 +97,34 @@
                 <th>
                     Product Name
                 </th>
-                <th>
-                    Price
-                </th>
+
                 <th>
                     Image
                 </th>
+                <th>
+                    Ordered Quantity
+                </th>
+                <th>
+                    Price
+                </th>
             </tr>
+            @if($cart)
             @foreach($cart->products as $product)
             <tr>
                 <td>
                     {{$product->name}}
                 </td>
                 <td>
-                    {{$product->price}}
-                </td>
-                <td>
                     {{$product->image}}
                 </td>
                 <td>
-                    <form action="{{ route('remove_cart_item', $cart->id) }}" method="post">
+                    {{$product->pivot->quantity}}
+                </td>
+                <td>
+                    {{$product->pivot->price}}
+                </td>
+                <td>
+                    <form action="{{ route('remove_cart_item', $product->id) }}" method="post">
                         @csrf
                         @method('DELETE')
                         <input class="btn btn-danger" type="submit" value="Remove">
@@ -125,11 +133,11 @@
             </tr>
             <?php
 
-            //$value = $value + $cart->product->price;
+            $value = $value + $product->pivot->price;
             ?>
 
             @endforeach
-
+            @endif
         </table>
     </div>
     <div class="cart_value">

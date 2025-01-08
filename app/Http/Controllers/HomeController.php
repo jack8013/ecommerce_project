@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\User;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,10 +46,14 @@ class HomeController extends Controller
         return view('home.index', compact('products', 'count'));
     }
 
-    public function add_cart(int $id)
+    public function add_cart(int $id, Request $request)
     {
         $product = Product::find($id);
         $user = Auth::user();
+
+        if (!$user) {
+            return redirect();
+        }
 
         //If user has no cart, create one
         $cart = $user->cart ?: $cart = Cart::create(['user_id' => $user->id,]);
@@ -56,7 +61,7 @@ class HomeController extends Controller
         $productExist = $cart->products()->where('product_id', $id)->first();
 
         if ($productExist) {
-            $quantity = $productExist->pivot->quantity + 1;
+            $quantity = $productExist->pivot->quantity + ($request->quantity ?: 1);
             $cart->products()->updateExistingPivot(
                 $id,
                 [
@@ -65,7 +70,7 @@ class HomeController extends Controller
                 ]
             );
         } else {
-            $cart->products()->attach($id, ['quantity' => 1, 'price' => $product->price]);
+            $cart->products()->attach($id, ['quantity' => ($request->quantity ?: 1), 'price' => $product->price]);
         }
 
         toastr()
@@ -93,9 +98,12 @@ class HomeController extends Controller
 
     public function remove_cart_item(int $id)
     {
-        $cart_item = Cart::find($id);
+        $user = Auth::user();
+        $cart = $user->cart;
 
-        $cart_item->delete();
+        if ($cart) {
+            $cart->products()->detach($id);
+        }
 
         return redirect()->back();
     }
@@ -103,25 +111,38 @@ class HomeController extends Controller
     public function place_order(Request $request)
     {
 
-        $userid = Auth::user()?->id;
+        $user = Auth::user();
+        $cart = $user->cart;
 
-        $carts = Cart::where('user_id', $userid)->get();
+        if (!$cart || $cart->products->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+        $order_total = 0;
+        $order = Order::create([
+            'name' => $request->name,
+            'rec_address' => $request->address,
+            'phone' => $request->phone,
+            'order_total' => 0,
+            'user_id' => $user->id,
+        ]);
 
+        foreach ($cart->products as $product) {
+            OrderDetails::create([
+                'product_quantity' => $product->pivot->quantity,
+                'price' => $product->price,
+                'price_total' => $product->pivot->price,
+                'order_id' => $order->id,
+                'product_id' => $product->id
+            ]);
 
-        foreach ($carts as $cart) {
-            $order = Order::create(
-                [
-                    'name' => $request->name,
-                    'rec_address' => $request->address,
-                    'phone' => $request->phone,
-                    'user_id' => $userid,
-                    'product_id' => $cart->product_id
-
-                ]
-            );
+            $order_total += $product->pivot->price;
         }
 
-        Cart::where('user_id', $userid)->delete();
+        $order->update([
+            'order_total' => $order_total,
+        ]);
+
+        $cart->products()->detach();
 
         return redirect()->back();
     }

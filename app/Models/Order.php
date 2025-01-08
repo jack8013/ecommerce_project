@@ -13,10 +13,11 @@ class Order extends Model
         'rec_address',
         'phone',
         'user_id',
+        'order_total'
     ];
 
-    public function product()
+    public function orderDetails()
     {
-        return $this->hasOne('App\Models\Product', 'id', 'product_id');
+        return $this->hasMany(OrderDetails::class);
     }
 }

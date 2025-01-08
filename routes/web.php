@@ -64,7 +64,7 @@ Route::middleware('auth', 'admin')->prefix('admin')->name('admin.')->group(funct
 
 Route::middleware('auth', 'verified')->group(function () {
     // Cart
-    route::get('add_cart/{id}', [HomeController::class, 'add_cart'])->name('add_cart');
+    route::post('add_cart/{id}', [HomeController::class, 'add_cart'])->name('add_cart');
     route::get('user_cart', [HomeController::class, 'user_cart'])->name('user_cart');
     route::delete('remove_cart_item/{id}', [HomeController::class, 'remove_cart_item'])->name('remove_cart_item');
 
