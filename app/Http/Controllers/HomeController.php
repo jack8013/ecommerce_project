@@ -135,6 +135,10 @@ class HomeController extends Controller
                 'product_id' => $product->id
             ]);
 
+            $product->update([
+                'quantity' => $product->quantity - $product->pivot->quantity,
+            ]);
+
             $order_total += $product->pivot->price;
         }
 
@@ -149,11 +153,9 @@ class HomeController extends Controller
 
     public function get_order()
     {
-        $userid = Auth::user()?->id;
+        $orders = Auth::user()->orders->all();
 
-        $orders = Order::where('user_id', $userid)->get();
-
-        $count = Cart::where('user_id', $userid)->count();
+        $count = Cart::where('user_id', Auth::user()->id)->count();
 
         return view('home.order', compact('count', 'orders'));
     }

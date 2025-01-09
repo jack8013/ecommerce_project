@@ -54,19 +54,22 @@
                 <th>Phone</th>
                 <th>Product Name</th>
                 <th>Price</th>
-                <th>Image</th>
+                {{-- <th>Image</th> --}}
                 <th>Status</th>
             </tr>
-            @foreach($orders as $order)
-            <tr>
-                <td>{{$order->name}}</td>
-                <td>{{$order->rec_address}}</td>
-                <td>{{$order->phone}}</td>
-                <td>{{$order->product->name}}</td>
-                <td>{{$order->product->price}}</td>
-                <td>{{$order->product->image}}</td>
-                <td>{{$order->status}}</td>
-            </tr>
+            {{-- @foreach ($orders->orderDetails as $orderDetail) --}}
+            @foreach ($orders as $order)
+                @foreach ($order->orderDetails as $orderDetail)
+                    <tr>
+                        <td>{{ $order->user->name}}</td>
+                        <td>{{ $order->rec_address }}</td>
+                        <td>{{ $order->phone }}</td>
+                        <td>{{ $order->order_total }}</td>
+                        <td>{{ $orderDetail->product_quantity }}</td>
+                        {{-- <td>{{ $orderDetail->product->image }}</td> --}}
+                        <td>{{ $order->status }}</td>
+                    </tr>
+                @endforeach
             @endforeach
         </table>
 
@@ -79,11 +82,10 @@
     <!-- end info section -->
 
 
-    <script src="{{asset('js/jquery-3.4.1.min.js')}}"></script>
-    <script src="{{asset('js/bootstrap.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-    </script>
-    <script src="{{asset('js/custom.js')}}"></script>
+    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
 
 </body>
 

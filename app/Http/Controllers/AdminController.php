@@ -94,7 +94,6 @@ class AdminController extends Controller
     public function delivered(int $id)
     {
 
-
         $order = Order::find($id);
 
         $order->status = "Delivered";
