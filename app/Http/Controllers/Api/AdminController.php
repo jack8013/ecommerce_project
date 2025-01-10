@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminCategoryResource;
 use App\Models\Category;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Flasher\Toastr\Prime\ToastrInterface;
 
 class AdminController extends Controller
 {
+    public function __construct(private CategoryService $service) {}
 
     public function index()
     {
@@ -36,14 +38,20 @@ class AdminController extends Controller
             ]);
         }
 
-
-        $category = Category::create([
-            'category_name' => $request->category_name,
-        ]);
-
+        $category = $this->service->store($request);
 
         return response()->json([
-            'messsage' => 'Category Created Succesfully',
+            'messsage' => 'Category Created Successfully',
+            'data' => new AdminCategoryResource($category),
+        ]);
+    }
+
+    public function update(Request $request, int $id){
+        $data = Category::find($id);
+        $category = $this->service->update($request, $data);
+
+        return response()->json([
+            'message' => 'Category Updated Successfully',
             'data' => new AdminCategoryResource($category),
         ]);
     }

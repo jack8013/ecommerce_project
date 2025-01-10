@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Order;
+use App\Services\CategoryService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Flasher\Toastr\Prime\ToastrInterface;
 
 class AdminController extends Controller
 {
+    public function __construct(private CategoryService $service) {}
+
     public function view_category()
     {
         $data = Category::all();
@@ -19,11 +22,7 @@ class AdminController extends Controller
 
     public function add_category(Request $request)
     {
-        $category = new Category;
-
-        $category->category_name = $request->category_name;
-
-        $category->save();
+        $this->service->store($request);
 
         toastr()
             ->closeButton()
@@ -43,10 +42,7 @@ class AdminController extends Controller
     public function update_category(Request $request, int $id)
     {
         $data = Category::find($id);
-
-        $data->category_name = $request->category_name;
-
-        $data->save();
+        $this->service->update($request, $data);
 
         toastr()
             ->closeButton()
@@ -58,8 +54,7 @@ class AdminController extends Controller
     public function delete_category(int $id)
     {
         $data = Category::find($id);
-
-        $data->delete();
+        $this->service->destroy($data);
 
         toastr()
             ->closeButton()

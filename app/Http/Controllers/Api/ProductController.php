@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+    public function __construct(private ProductService $service) {}
+
     public function index()
     {
         $products = Product::get();
@@ -24,9 +27,12 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'string|required',
             'description' => 'required',
-            'price' => 'required|decimal:2',
+            'price' => 'required|deci:2',
+            'quantity' => 'nullable',
+            'category_id' => 'required',
+            'image' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -34,12 +40,7 @@ class ProductController extends Controller
                 'error' => $validator->messages(),
             ]);
         }
-
-        $product = Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-        ]);
+        $product = $this->service->store($request);
 
         return response()->json([
             'messsage' => 'Product Created Succesfully',
@@ -55,9 +56,12 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'string|required',
             'description' => 'required',
-            'price' => 'required|decimal:2',
+            'price' => 'required|deci:2',
+            'quantity' => 'nullable',
+            'category_id' => 'required',
+            'image' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -66,11 +70,7 @@ class ProductController extends Controller
             ]);
         }
 
-        $product->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-        ]);
+        $this->service->update($request, $product);
 
         return response()->json([
             'messsage' => 'Product Updated Succesfully',
@@ -78,7 +78,8 @@ class ProductController extends Controller
         ]);
     }
 
-    public function destroy(Product $product) {
+    public function destroy(Product $product)
+    {
         $product->delete();
 
         return response()->json([

@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+
+    public function __construct(private ProductService $service) {}
+
     public function add_product()
     {
 
@@ -33,26 +37,7 @@ class ProductController extends Controller
                 'image' => 'nullable',
             ]
         );
-        $image = $request->image;
-        if ($request->image) {
-            $imagename = time() . '.' . $image->getClientOriginalExtension();
-
-            $request->image->move('products', $imagename);
-        } else {
-            $imagename = null;
-        }
-
-        $product = Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image' => $imagename,
-            'price' => $request->price,
-            'category_id' => $request->category_id,
-            'quantity' => $request->quantity,
-        ]);
-
-
-
+        $this->service->store($request);
 
         return redirect()->back();
     }
@@ -68,7 +53,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
 
-        $product->delete();
+        $this->service->destroy($product);
 
         toastr()
             ->closeButton()
@@ -80,7 +65,6 @@ class ProductController extends Controller
         $data = Product::find($id);
 
         $category = Category::all();
-        
 
         return view('admin.edit_product', compact('data', 'category'));
     }
@@ -89,7 +73,6 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
 
-      
         $validator = Validator::make(
             $request->all(),
             [
@@ -101,23 +84,8 @@ class ProductController extends Controller
                 'image' => 'nullable',
             ]
         );
-        $image = $request->image;
-        if ($request->image) {
-            $imagename = time() . '.' . $image->getClientOriginalExtension();
 
-            $request->image->move('products', $imagename);
-        } else {
-            $imagename = null;
-        }
-
-        $product->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image' => $imagename,
-            'price' => $request->price,
-            'category_id' => $request->category_id,
-            'quantity' => $request->quantity,
-        ]);
+        $this->service->update($request, $product);
 
         toastr()
             ->closeButton()
@@ -137,11 +105,12 @@ class ProductController extends Controller
         return view('admin.view_product', compact('products'));
     }
 
-    public function product_details(int $id){
+    public function product_details(int $id)
+    {
         $product = Product::find($id);
         $user_id = Auth::user()?->id;
 
         $count = Cart::where('user_id', $user_id)->count();
-        return view('home.product_details',compact('product','count'));
+        return view('home.product_details', compact('product', 'count'));
     }
 }
