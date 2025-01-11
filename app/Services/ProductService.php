@@ -15,6 +15,11 @@ class ProductService
         //
     }
 
+    public function show($id)
+    {
+        return Product::find($id);
+    }
+
     public function store(Request $request)
     {
         $image = $request->image;

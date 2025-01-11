@@ -107,7 +107,8 @@ class ProductController extends Controller
 
     public function product_details(int $id)
     {
-        $product = Product::find($id);
+        $product = $this->service->show($id);
+        //$product = Product::find($id);
         $user_id = Auth::user()?->id;
 
         $count = Cart::where('user_id', $user_id)->count();

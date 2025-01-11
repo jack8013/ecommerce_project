@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminOrderController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
@@ -53,10 +55,10 @@ Route::middleware('auth', 'admin')->prefix('admin')->name('admin.')->group(funct
 
 
     //Admin Order
-    route::get('view_order', [AdminController::class, 'view_order'])->name('view_order');
-    route::post('on_the_way/{id}', [AdminController::class, 'on_the_way'])->name('on_the_way');
-    route::post('delivered/{id}', [AdminController::class, 'delivered'])->name('delivered');
-    route::post('print_pdf/{id}', [AdminController::class, 'print_pdf'])->name('print_pdf');
+    route::get('view_order', [AdminOrderController::class, 'view_order'])->name('view_order');
+    route::post('on_the_way/{id}', [AdminOrderController::class, 'on_the_way'])->name('on_the_way');
+    route::post('delivered/{id}', [AdminOrderController::class, 'delivered'])->name('delivered');
+    route::post('print_pdf/{id}', [AdminOrderController::class, 'print_pdf'])->name('print_pdf');
 });
 
 
@@ -64,9 +66,9 @@ Route::middleware('auth', 'admin')->prefix('admin')->name('admin.')->group(funct
 
 Route::middleware('auth', 'verified')->group(function () {
     // Cart
-    route::post('add_cart/{id}', [HomeController::class, 'add_cart'])->name('add_cart');
-    route::get('user_cart', [HomeController::class, 'user_cart'])->name('user_cart');
-    route::delete('remove_cart_item/{id}', [HomeController::class, 'remove_cart_item'])->name('remove_cart_item');
+    route::post('add_cart/{id}', [CartController::class, 'add_cart'])->name('add_cart');
+    route::get('user_cart', [CartController::class, 'user_cart'])->name('user_cart');
+    route::delete('remove_cart_item/{id}', [CartController::class, 'remove_cart_item'])->name('remove_cart_item');
 
     // Order
     route::post('place_order', [HomeController::class, 'place_order'])->name('place_order');

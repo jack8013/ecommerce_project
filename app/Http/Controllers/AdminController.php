@@ -65,45 +65,5 @@ class AdminController extends Controller
         ]);
     }
 
-    public function view_order()
-    {
 
-
-        $orders = Order::all();
-
-        return view('admin.view_order', compact('orders'));
-    }
-
-    public function on_the_way(int $id)
-    {
-
-        $order = Order::find($id);
-
-        $order->status = "On the way";
-
-        $order->save();
-
-        return redirect()->back();
-    }
-
-    public function delivered(int $id)
-    {
-
-        $order = Order::find($id);
-
-        $order->status = "Delivered";
-
-        $order->save();
-
-        return redirect()->back();
-    }
-
-    public function print_pdf(int $id)
-    {
-        $order = Order::find($id);
-
-        $pdf = Pdf::loadView('admin.invoice', compact('order'));
-
-        return $pdf->download('invoice.pdf');
-    }
 }
