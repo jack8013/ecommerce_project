@@ -24,9 +24,7 @@ class CartService
         // Each user has only one cart, so fetch cart through User's eloquent relationship
         $cart = Auth::user()?->cart;
 
-        return response()->json([
-            'data' => $cart
-        ]);
+        return $cart;
     }
 
     public function store($id, Request $request)

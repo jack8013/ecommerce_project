@@ -50,7 +50,9 @@ class CartController extends Controller
 
     public function user_cart()
     {
-        $this->service->show();
+        $cart = $this->service->show();
+        $user_id = Auth::user()?->id;
+        $count = Cart::where('user_id', $user_id)->count();
         // $user_id = Auth::user()?->id;
 
         // $count = Cart::where('user_id', $user_id)->count();

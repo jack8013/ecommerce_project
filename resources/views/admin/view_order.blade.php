@@ -36,6 +36,10 @@
     input[type=search] {
         margin-left: 50px;
     }
+
+    .order_details {
+        justify-content: center;
+    }
 </style>
 
 <body>
@@ -59,6 +63,7 @@
                             <th>Total Price</th>
                             <th>Status</th>
                             <th>Change Status</th>
+                            <th>Details</th>
                             <th></th>
                         </tr>
                         @foreach ($orders as $order)
@@ -69,8 +74,6 @@
                                 <td>{{ $order->phone }}</td>
                                 <td>{{ $order->order_total }}</td>
                                 <td>{{ $order->status }}</td>
-
-
                                 <td>
                                     <form action="{{ route('admin.on_the_way', $order->id) }}" method="POST"
                                         style="display:inline;">
@@ -90,10 +93,34 @@
                                         <button type="submit" class="btn btn-secondary">Print PDF</button>
                                     </form>
                                 </td>
+                                <td>
+                                    <button class="order_details_toggle"
+                                        data-order-id="{{ $order->id }}">Details</button>
+                                </td>
+                            </tr>
+
+                            <tr class="order_details" id="order-details-{{ $order->id }}" style="display: none;">
+                                <td colspan="8">
+                                    <table class="order-details-table">
+                                        <tr>
+                                            <th>Product Name</th>
+                                            <th>Product Quantity</th>
+                                            <th>Product Price</th>
+                                            <th>Price Total</th>
+                                        </tr>
+                                        @foreach ($order->orderDetails as $orderDetail)
+                                            <tr>
+                                                <td>{{ $orderDetail->product->name }}</td>
+                                                <td>{{ $orderDetail->product_quantity }}</td>
+                                                <td>{{ $orderDetail->product->price }}</td>
+                                                <td>{{ $orderDetail->price_total }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                </td>
                             </tr>
                         @endforeach
                     </table>
-
                 </div>
             </div>
         </div>
@@ -107,6 +134,24 @@
         <script src="{{ asset('admincss/js/charts-home.js') }}"></script>
         <script src="{{ asset('admincss/js/front.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <script>
+            const element = document.getElementById("order_details_toggle");
+
+            document.querySelectorAll('.order_details_toggle').forEach(button => {
+                button.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-order-id');
+                    const detailRows = document.getElementById('order-details-' + orderId);
+                    console.log(detailRows);
+                    if (detailRows.style.display == 'none') {
+                        detailRows.style.display = 'table-row';
+                    } else {
+                        detailRows.style.display = 'none';
+                    }
+
+                })
+            })
+        </script>
 
         <!-- <script>
             const deleteProductUrl = '/admin/delete_product';

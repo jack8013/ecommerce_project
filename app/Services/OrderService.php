@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
@@ -13,8 +14,7 @@ class OrderService
      */
     public function index()
     {
-        $orders = Order::all();
-
+        $orders = Order::with('orderDetails.product')->get();
         return $orders;
     }
 
